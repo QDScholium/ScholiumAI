@@ -3,7 +3,6 @@ import os
 from openai import OpenAI
 from pinecone import Pinecone
 
-from langchain_pinecone import PineconeVectorStore
 from langchain_openai import ChatOpenAI,OpenAIEmbeddings
 from langchain_core.messages import HumanMessage
 
@@ -67,5 +66,4 @@ if __name__ == "__main__":
     draw_graph(RAG)
 
     print(test_index("Give me papers on BERT and Law"))
-    old_response = [paper.metadata["Title"] for paper in vector_store.similarity_search("Give me papers on BERT", k=10)]
     print(old_response)

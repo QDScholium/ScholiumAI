@@ -5,7 +5,6 @@ from langchain_core.tools import tool
 from langchain_core.messages import SystemMessage
 from langchain_core.runnables import RunnableConfig
 from pinecone import Pinecone
-from langchain_pinecone import PineconeVectorStore
 
 from langgraph.graph import END
 from langgraph.prebuilt import ToolNode, tools_condition
