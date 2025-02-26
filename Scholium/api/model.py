@@ -186,7 +186,7 @@ def compile_graph():
     graph_builder = StateGraph(ResearchState)
     graph_builder.add_node(query_or_respond)
     graph_builder.add_node(tools)
-    # graph_builder.add_node(generate)
+
     graph_builder.add_node(generate_summary_node)
     graph_builder.set_entry_point("query_or_respond")
     graph_builder.add_conditional_edges(
@@ -196,7 +196,6 @@ def compile_graph():
     )
     graph_builder.add_edge("tools", "generate_summary_node")
     graph_builder.add_edge("generate_summary_node", END)
-    # checkpointer = PostgresSaver.from_conn_string(DB_URI)
     checkpointer = MemorySaver()
     graph = graph_builder.compile(checkpointer=checkpointer)
     return graph
