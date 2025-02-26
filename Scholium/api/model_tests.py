@@ -7,7 +7,6 @@ from langchain_openai import ChatOpenAI,OpenAIEmbeddings
 from langchain_core.messages import HumanMessage
 
 from api.model import RAG
-from api.model_utils import filter_results
 from api.pinecone_vectorstore import ScholiumPineconeVectorStore
 
 LANGSMITH_API_KEY = os.environ.get("LANGSMITH_API_KEY")
@@ -28,7 +27,6 @@ client = OpenAI(api_key=OPENAI_API_KEY)
 pc = Pinecone(api_key= pinecone_api_key)
 index = pc.Index("arxiv-index")
 index2 = pc.Index("scholium-index")
-vector_store = PineconeVectorStore(embedding=embeddings, index=index2)
 
 async def invoke_chat(query:str, thread: str):
     input_messages = [HumanMessage(query)]
@@ -40,11 +38,6 @@ async def test_chat():
     thread = "123"
     response = await invoke_chat("Give me papers on BERT",thread)
     return response
-    
-def test_filter_results():
-    retrieved_docs = vector_store.similarity_search_with_score("Transformers", k=1) 
-    retrieved_docs = filter_results(retrieved_docs)
-    assert(len(retrieved_docs) == 0)
 
 def draw_graph(graph):
     from IPython.display import Image, display
@@ -62,8 +55,6 @@ if __name__ == "__main__":
 
     import asyncio  
     asyncio.run(test_chat())
-    test_filter_results()
     draw_graph(RAG)
 
     print(test_index("Give me papers on BERT and Law"))
-    print(old_response)

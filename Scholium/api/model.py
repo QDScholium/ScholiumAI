@@ -30,7 +30,7 @@ logger = logging.getLogger('uvicorn.error')
 OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
 pinecone_api_key = os.environ.get("PINECONE_API_KEY")
 model = ChatOpenAI(
-    model="gpt-4o",
+    model="gpt-4o-mini",
     temperature=1,
     max_tokens=None,
     timeout=None,
@@ -55,7 +55,8 @@ class ResearchState(MessagesState):
 def retrieve(query: str):
     """Retrieve information related to a query."""
     retrieved_docs = vector_store.similarity_search(query= query, top_k= 10)
-    logger.debug(retrieved_docs)
+    logger.debug(query)
+    # logger.debug(retrieved_docs)
     serialized_docs = [
         f"Source: {doc["metadata"]} \n Content: {doc["metadata"]["summary"]}" 
         for doc in retrieved_docs
@@ -79,7 +80,7 @@ tools = ToolNode([retrieve])
 class Metadata(BaseModel):
     """Model for a reference"""
     title: str = Field(description="The title of the paper")
-    authors: str = Field(description="The authors of the paper ")
+    authors: str = Field(description="The authors of the paper")
     publish_date: str = Field(description="The publish date of the paper")
 
 class SummaryInput(BaseModel):

@@ -2,6 +2,7 @@ langgraph == 0.2.66
 langchain-openai == 0.2.9
 langgraph-checkpoint == 2.0.10
 
+pinecone[grpc]
 pinecone == 5.4.2
 python-dotenv == 1.0.1
 

@@ -37,8 +37,7 @@ class ScholiumPineconeVectorStore():
         ])
     
     def _parse_authors(self, author_strings):
-        return [f"{lastname}, {firstname}" 
-           for lastname, firstname, _ in (ast.literal_eval(entry) for entry in author_strings)]
+        return [f"{lastname}, {firstname}" for lastname, firstname, _ in (ast.literal_eval(entry)[:3] for entry in author_strings)]
     
 
     def similarity_search(self, query, top_k = 10):
@@ -74,6 +73,6 @@ if __name__ == "__main__":
     client = OpenAI(api_key=OPENAI_API_KEY)
     vector_store = ScholiumPineconeVectorStore(embedding_client= client, index = index)
 
-    print(vector_store._parse_authors((["['Chalkidis', 'Ilias', '']", "['Fergadiotis', 'Manos', '']", "['Malakasiotis', 'Prodromos', '']", "['Aletras', 'Nikolaos', '']", "['Androutsopoulos', 'Ion', '']"])))
-    results = vector_store.similarity_search("Give me papers on BERT and law", 5)
+    # print(vector_store._parse_authors((["['Chalkidis', 'Ilias', '']", "['Fergadiotis', 'Manos', '']", "['Malakasiotis', 'Prodromos', '']", "['Aletras', 'Nikolaos', '']", "['Androutsopoulos', 'Ion', '']"])))
+    results = vector_store.similarity_search("BERT algorithm overview", 5)
     print(results)
