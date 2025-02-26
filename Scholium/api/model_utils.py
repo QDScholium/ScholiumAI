@@ -1,4 +1,12 @@
 import re
+import os
+import dotenv
+from openai import OpenAI
+
+dotenv.load_dotenv()
+OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
+
+client = OpenAI(api_key=OPENAI_API_KEY)
 
 def extract_paper_titles(text):
     """
@@ -22,3 +30,14 @@ def get_paper_metadata(titles:list[str], metadata):
             metadata_list.append(metadata[title.strip("\"")])
     return metadata_list
 
+
+def filter_results(response, score_cutoff = 0.8):
+    '''
+    This exists because, for some stupid reason, pinecone doesn't have a way to cutoff low similarity responses
+    '''
+    new_response = []
+    for i, match in enumerate(response):
+        score  = match[1]
+        if score >= score_cutoff:
+            new_response.append(match[0])
+    return new_response

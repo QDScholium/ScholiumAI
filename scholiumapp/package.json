@@ -3,7 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "fastapi-run": " pip install -r ../Scholium/requirements.txt && python ../Scholium/server.py",
+    "fastapi-run": " pip install -r ../Scholium/requirements.txt && python ../Scholium/api/server.py",
+    "fastapi-dev": "pip install -r ../Scholium/requirements.txt && cd ../Scholium/api/ && uvicorn server:app --reload --log-level debug",
     "next-dev": "next dev",
     "dev": "concurrently \"npm run next-dev\" \" npm run fastapi-run\"",
     "next-start": "next start",

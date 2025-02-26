@@ -12,7 +12,6 @@ from api.model import RAG
 import uvicorn
 app = FastAPI()
 
-# Initialize the CopilotKit SDK
 sdk = CopilotKitRemoteEndpoint(
     agents=[
         LangGraphAgent(
@@ -23,12 +22,7 @@ sdk = CopilotKitRemoteEndpoint(
     ],
 )
  
-# Add the CopilotKit endpoint to your FastAPI app
 add_fastapi_endpoint(app, sdk, "/copilotkit")
-
-# def main():
-#     """Run the uvicorn server."""
-#     uvicorn.run("server:app", host="0.0.0.0", port=8000, reload=True)
 
 def main():
     """Run the uvicorn server."""
