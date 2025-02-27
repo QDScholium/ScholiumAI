@@ -17,7 +17,7 @@ Create instant citations in 5 different styles:
 <img alt="BERTandLaw Sources" src="https://github.com/QDScholium/ScholiumAssets/blob/main/Images/Screenshots/References.png" width="auto" height="auto"></img>
 
 # 🔮Future plans🔮
-- Expanded Context: Currently, Scholium only has access to the arXiv database, but there are definitely planes to expand to Pubmed and hopefully academic journals soon!
+- Expanded Context: Currently, Scholium only has access to the arXiv database, but we hope to expand to Pubmed and hopefully academic journals soon!
 - More Citation Styles: Let us know what styles you would like us to add!
 - Bibliography Manager: Managing a Bibliography can be a pain in the ass. Let us do it so you can save your time. 
 - Community Forums: It's like Goodreads for papers! Rate, discuss, and share the most illuminating articles you've come across.
