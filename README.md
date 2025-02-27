@@ -1,4 +1,4 @@
-<h1 align="center">
+<h1 align="center" style="font-size: 3em;">
   <strong>Scholium</strong>
 </h1>
 
