@@ -26,7 +26,7 @@ Create instant citations in 5 different styles:
 - Community Forums: It's like Goodreads for papers! Rate, discuss, and share the most illuminating articles you've come across.
 
 Please feel free to contribute!
-
+- If there are any feature requests or issues, please let me know in the issues tab or email me at sunny@scholium.ai. 
 
 
 
