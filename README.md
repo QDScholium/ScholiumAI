@@ -1,4 +1,4 @@
-# Scholium
+# <center>Scholium</center>
 Researchers spend days finding relevant papers because Google returns non-credible and unscholarly sources without citations. Scholium is an AI agent that finds and cites the relevant scholarly papers in seconds.
 
 # 🔎Find sources based on a query🔎
