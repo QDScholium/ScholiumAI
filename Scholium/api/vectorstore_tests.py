@@ -1,7 +1,7 @@
 import os
 from openai import OpenAI
 from dotenv import load_dotenv
-from pinecone.grpc import PineconeGRPC as Pinecone
+from pinecone import Pinecone
 
 from api.pinecone_vectorstore import ScholiumPineconeVectorStore
 
