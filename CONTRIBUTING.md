@@ -32,6 +32,16 @@ npm run dev
 
 ```
 
+# Local Development
+To start Scholium locally:
+```shell
+cd scholiumapp
+# Starts Backend
+npm run fastapi-run
+# Starts Frontend
+npm run dev
+```
+
 
 ### 1. Fork & clone
 - Click on the Fork button on GitHub
