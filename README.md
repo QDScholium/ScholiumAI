@@ -1,5 +1,5 @@
 <h1 align="center" style="font-size: 3em;">
-  <strong>Scholium</strong>
+  <strong>Scholium: Your Personal Research Agent</strong>
 </h1>
 
 Researchers spend days finding relevant papers because Google returns non-credible and unscholarly sources without citations. Scholium is an AI agent that finds and cites the relevant scholarly papers in seconds.
