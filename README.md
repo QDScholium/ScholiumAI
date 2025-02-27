@@ -1,17 +1,19 @@
 # Scholium
 Researchers spend days finding relevant papers because Google returns non-credible and unscholarly sources without citations. Scholium is an AI agent that finds and cites the relevant scholarly papers in seconds.
 
-
 # 🔎Find sources based on a query🔎
 Don't search for papers by hand! Find them with just a query!
+
 <img alt="BERTandLaw Sources" src="https://github.com/QDScholium/ScholiumAssets/blob/main/Images/Screenshots/BertandLaw.png" width="auto" height="auto"></img>
 
 # ✍️Summarize Papers ✍️
 Summarize the papers you want!
+
 <img alt="BERTandLaw Sources" src="https://github.com/QDScholium/ScholiumAssets/blob/main/Images/Screenshots/Attention.png" width="auto" height="auto"></img>
 
 # 📄Instant Citations📄
-Create instant citations in 5 different styles: 
+Create instant citations in 5 different styles:
+
 <img alt="BERTandLaw Sources" src="https://github.com/QDScholium/ScholiumAssets/blob/main/Images/Screenshots/References.png" width="auto" height="auto"></img>
 
 # 🔮Future plans🔮
@@ -26,4 +28,4 @@ Please feel free to contribute!
 
 
 # CONTRIBUTING 
-Pleasee see contributing.md
+Please see contributing.md
