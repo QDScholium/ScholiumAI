@@ -11,12 +11,15 @@ export function HomeResearch() {
   return (
     <>
       <div className="flex flex-col items-center justify-center relative z-10 w-4/5 mx-auto">
-        {researchQuery && (
-          <div className="absolute top-0 left-0 p-4">
+        {/* {researchQuery
+          // <div className="absolute top-0 left-0 p-4">
+          //   <HomeButton/>
+          // </div>
+        } */}
+        <div className="absolute top-0 left-0 p-4">
             <HomeButton/>
-          </div>
-        )}
-        <div className="flex-1 w-full flex justify-center items-center">
+        </div>
+        <div className="mt-16 flex-1 w-full flex justify-center items-center">
           {researchQuery ? (
             <AnimatePresence
               key="results"
