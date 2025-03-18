@@ -29,7 +29,7 @@ import {
         },
       ],
     }) : copilotKitEndpoint({
-      url: process.env.REMOTE_ACTION_URL || "http://localhost:8000/copilotkit",// http://localhost:8000/copilotkit for local devlopment https://scholium-api.vercel.app//copilotkit
+      url: process.env.REMOTE_ACTION_URL || "https://scholium-api.vercel.app//copilotkit",// http://localhost:8000/copilotkit for local devlopment https://scholium-api.vercel.app//copilotkit
     })
     
     const runtime = new CopilotRuntime({
