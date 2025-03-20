@@ -73,20 +73,24 @@ class BaseOpenAlexHandler:
         """
         return raw_response["results"]
     
-    def search(self, query: str, filters: dict = None):
+    def search(self, query: str, endpoint: str, filters: dict = None, n_results: Optional[int] = None, **kwargs):
         """
-        High-level method to search the OpenAlex API.
+        Searches the OpenAlex API for topics with the given query and filters.
         
         Args:
-            query (str): The search query.
-            filters (dict, optional): Additional filters to apply to the search.
+            query (str): The search query string
+            filters (dict, optional): Dictionary of filters to apply to the search
+            n_results (int, optional): Number of results to return
+            **kwargs: Additional parameters to pass to the API
             
         Returns:
-            The processed search results.
+            list: The search results from the OpenAlex API
         """
-        params = self.translate_request(query, filters)
-        response = self.make_request("search", params)
-        return self.translate_response(response)
+        params = self.translate_request(query, filters=filters, n_results=n_results)
+        if kwargs:
+            params.update(kwargs)
+        raw_response = self.make_request(endpoint, params)
+        return self.translate_response(raw_response=raw_response)
     
 
 class WorksHandler(BaseOpenAlexHandler):
@@ -375,13 +379,32 @@ class TopicHandler(BaseOpenAlexHandler):
         params = self.translate_request(query, filters=filters, n_results=n_results)
         if kwargs:
             params.update(kwargs)
-        endpoint = "concepts"
+        endpoint = "topics"
         raw_response = self.make_request(endpoint, params)
         return self.translate_response(raw_response=raw_response)
     
     def get_topic_id(self, topic_name: str) -> str:
         topic_link = self.search(topic_name)[0]["id"]
         return topic_link.split("https://openalex.org/")[1]
+    
+
+class IDHandler(BaseOpenAlexHandler):
+    '''
+    lighteight handler meant to get ids from their respective names
+    '''
+    
+    def get_author_id(self,author_name: str) -> str:
+        author_link = self.search(author_name, endpoint="authors")[0]["id"]
+        return author_link.split("https://openalex.org/")[1]
+    
+    def get_institution_id(self, institution_name: str) -> str:
+        institution_link = self.search(institution_name, endpoint="institutions")[0]["id"]
+        return institution_link.split("https://openalex.org/")[1]
+    
+    def get_topic_id(self, topic_name: str) -> str:
+        topic_link = self.search(topic_name, endpoint="topics")[0]["id"]
+        return topic_link.split("https://openalex.org/")[1]
+
 
 if __name__ == '__main__':
     wh = WorksHandler("sunny@scholium.ai")
@@ -395,3 +418,20 @@ if __name__ == '__main__':
     ih = InstititionHandler("sunny@scholium.ai")
     institution = ih.get_institution_id("university of toronto")
     assert institution == "I185261750"
+    
+    th = TopicHandler("sunny@scholium.ai")
+    topic = th.get_topic_id("machine learning")
+    assert topic == "T12072"
+    
+    idh = IDHandler("sunny@scholium.ai")
+    author = idh.get_author_id("carl sagan")
+    assert author == "A5069290754"
+
+    institution = idh.get_institution_id("university of toronto")
+    assert institution == "I185261750"
+    
+    topic = idh.get_topic_id("machine learning")
+    assert topic == "T12072"
+
+
+
