@@ -25,18 +25,18 @@ class BaseOpenAlexHandler:
         
         self.base_url = "https://api.openalex.org/"
 
-    def make_request(self, endpoint: str, params: dict = None):
+    def make_request(
+        self, 
+        endpoint: str, 
+        params: dict = None
+    ):
         """
         Make a request to the OpenAlex API.
-        
-        Args:
-            endpoint (str): The API endpoint to request.
-            params (dict, optional): Query parameters for the request.
-            
-        Returns:
-            The raw response from the API.
         """
-        raise NotImplementedError("Subclasses must implement make_request method")
+        params = {**params, **self.params}
+        url = self.base_url + endpoint
+        response = requests.get(url=url, params=params, headers=self.headers)
+        return response.json()
     
     def translate_request(self, query: str, filters: dict = None) -> dict:
         """
@@ -289,8 +289,78 @@ class WorksHandler(BaseOpenAlexHandler):
         raw_response = self.make_request(endpoint, params)
         return self.translate_response(raw_response=raw_response)
 
+class AuthorHandler(BaseOpenAlexHandler):
+    """
+    Handler for the OpenAlex Authors API endpoint.
+    
+    This class provides methods to search for authors and process author data
+    from the OpenAlex API.
+    """
+    
+    def translate_request(self, query: str, filters: dict = None, n_results: Optional[int] = None):
+        """
+        Translates a search query and filters into OpenAlex API parameters.
+        
+        Args:
+            query (str): The search query string
+            filters (dict, optional): Dictionary of filters to apply to the search
+            n_results (int, optional): Number of results to return
+            
+        Returns:
+            dict: Parameters formatted for the OpenAlex API
+        """
+        params = {"search": query}
+        
+        if filters:
+            for key, value in filters.items():
+                params[key] = value
+                
+        if n_results:
+            params["per_page"] = n_results
+            
+        return params
+    
+    def translate_response(self, raw_response):
+        """
+        Process and transform the OpenAlex API response into a standardized format.
+        
+        Args:
+            raw_response (dict): The raw response from the OpenAlex API.
+            
+        Returns:
+            list: A list of standardized author objects extracted from the response.
+        """
+        return raw_response["results"]
+    
+    def search(self, query: str, filters: dict = None, n_results: Optional[int] = None, **kwargs):
+        """
+        Searches the OpenAlex API for authors with the given query and filters.
+        
+        Args:
+            query (str): The search query string
+            filters (dict, optional): Dictionary of filters to apply to the search
+            n_results (int, optional): Number of results to return
+            **kwargs: Additional parameters to pass to the API
+            
+        Returns:
+            list: The search results from the OpenAlex API
+        """
+        params = self.translate_request(query, filters=filters, n_results=n_results)
+        if kwargs:
+            params.update(kwargs)
+        endpoint = "authors"
+        raw_response = self.make_request(endpoint, params)
+        return self.translate_response(raw_response=raw_response)
+    
+    def get_author_id(self,author_name: str) -> str:
+        author_link = self.search(author_name)[0]["id"]
+        return author_link.split("https://openalex.org/")[1]
 
 if __name__ == '__main__':
     wh = WorksHandler("sunny@scholium.ai")
     works = wh.search("BERT", filters={},n_results=10)
     assert len(works) == 10
+
+    ah = AuthorHandler("sunny@scholium.ai")
+    authors = ah.get_author_id("carl sagan")
+    print(authors)
