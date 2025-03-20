@@ -357,6 +357,32 @@ class InstititionHandler(BaseOpenAlexHandler):
         institution_link = self.search(institution_name)[0]["id"]
         return institution_link.split("https://openalex.org/")[1]
 
+class TopicHandler(BaseOpenAlexHandler):
+    
+    def search(self, query: str, filters: dict = None, n_results: Optional[int] = None, **kwargs):
+        """
+        Searches the OpenAlex API for topics with the given query and filters.
+        
+        Args:
+            query (str): The search query string
+            filters (dict, optional): Dictionary of filters to apply to the search
+            n_results (int, optional): Number of results to return
+            **kwargs: Additional parameters to pass to the API
+            
+        Returns:
+            list: The search results from the OpenAlex API
+        """
+        params = self.translate_request(query, filters=filters, n_results=n_results)
+        if kwargs:
+            params.update(kwargs)
+        endpoint = "concepts"
+        raw_response = self.make_request(endpoint, params)
+        return self.translate_response(raw_response=raw_response)
+    
+    def get_topic_id(self, topic_name: str) -> str:
+        topic_link = self.search(topic_name)[0]["id"]
+        return topic_link.split("https://openalex.org/")[1]
+
 if __name__ == '__main__':
     wh = WorksHandler("sunny@scholium.ai")
     works = wh.search("BERT", filters={},n_results=10)
