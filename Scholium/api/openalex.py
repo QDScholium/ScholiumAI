@@ -102,6 +102,7 @@ class WorksHandler(BaseOpenAlexHandler):
         self.supported_filters = {
             "authorships.affiliations.institution_ids",
             "authorships.author.id",
+            "author.id",
             "authorships.author.orcid",
             "authorships.countries",
             "authorships.institutions.country_code",

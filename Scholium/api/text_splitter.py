@@ -7,6 +7,9 @@ class SearchParameters(BaseModel):
     This model defines the parameters that can be extracted from a natural language
     search query to facilitate structured academic paper searches.
     """
+    query: str = Field(
+        description="The main search query text used to find relevant academic papers"
+    )
     authors: list[str] = Field(
         description="List of author names to filter search results"
     )
@@ -14,7 +17,7 @@ class SearchParameters(BaseModel):
         description="List of key topics or concepts to search for"
     )
     language: str = Field(
-        description="Language of the papers to search for"
+        description="Language of the papers to search for in ISO 639-1 format"
     )
     n_papers: int = Field(
         description="Number of papers to retrieve",
