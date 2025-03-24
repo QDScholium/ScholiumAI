@@ -31,3 +31,16 @@ print(f"Language: {search_params2.language}")
 print(f"Number of papers: {search_params2.n_papers}")
 print(f"Institutions: {search_params2.institutions}")
 print(f"Time taken: {end_time - start_time:.4f} seconds")
+
+
+query2 = "give me papers on transformers"
+start_time = time.time()
+search_params2 = extract_search_parameters(query2, client)
+end_time = time.time()
+print("\nTest 2 - Extracted Search Parameters:")
+print(f"Authors: {search_params2.authors}")
+print(f"Concepts: {search_params2.concepts}")
+print(f"Language: {search_params2.language}")
+print(f"Number of papers: {search_params2.n_papers}")
+print(f"Institutions: {search_params2.institutions}")
+print(f"Time taken: {end_time - start_time:.4f} seconds")

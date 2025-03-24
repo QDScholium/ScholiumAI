@@ -62,4 +62,10 @@ if __name__ == '__main__':
     idhandler = IDHandler("sunny@scholium.ai")
     wh = WorksHandler("sunny@scholium.ai")
     query = "Find 15 papers about transformer models by Vaswani and Hinton in English from U of T"
-    search_parameters_to_search(client=client, query=query, idhandler=idhandler, workshandler=wh)
+    results = search_parameters_to_search(client=client, query=query, idhandler=idhandler, workshandler=wh)
+    print(f"Found {len(results)} results")
+    
+    import json
+    with open('search_results.json', 'w') as f:
+        json.dump(results, f, indent=4)
+    print("Results exported to search_results.json")

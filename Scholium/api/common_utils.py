@@ -35,7 +35,7 @@ def inverted_index_to_string(inverted_index):
             max_index = max(max_index, max(positions))
     
     # Create a list of tokens with a size equal to max_index+1
-    tokens = [None] * (max_index + 1)
+    tokens = [' '] * (max_index + 1)
     
     # For each word, insert it at each of its positions in the tokens list
     for word, positions in inverted_index.items():
@@ -43,8 +43,13 @@ def inverted_index_to_string(inverted_index):
             tokens[pos] = word
     
     # # Check that every position is filled
-    # if any(token is None for token in tokens):
-    #     raise ValueError("The inverted index is incomplete; some positions are missing.")
+    if any(token is None for token in tokens):
+        # Print the inverted index for debugging
+        print("Inverted index:", inverted_index)
+        # Print the positions that are missing
+        missing_positions = [i for i, token in enumerate(tokens) if token is None]
+        print(f"Missing positions: {missing_positions}")
+        raise ValueError("The inverted index is incomplete; some positions are missing.")
     
     # Join the tokens into a single string with spaces between words
     return " ".join(tokens)
