@@ -24,12 +24,25 @@ def process_results(results):
     for result in results:
         abstract_inverted_index = result.get('abstract_inverted_index')
         abstract = inverted_index_to_string(abstract_inverted_index) if abstract_inverted_index else "No abstract available"
+        
+        # Add journal information if available
+        journal_info = None
+        if 'primary_location' in result and result['primary_location']:
+            if 'source' in result['primary_location'] and result['primary_location']['source']:
+                journal_info = result['primary_location']['source'].get('display_name', '')
+       
         processed_item = {
             'title': result.get('title', ''),
             'abstract': abstract,
-            'publication_date': result.get('publication_date', ''),
-            'authors': parse_authors(result.get('authorships', [])),
-            'referenced_works': get_referenced_works(result.get('referenced_works', []))
+            'metadata':{
+                        'publication_date': result.get('publication_date', ''),
+                        'authors': parse_authors(result.get('authorships', [])),
+                        'referenced_works': get_referenced_works(result.get('referenced_works', [])),
+                        'related_works': get_referenced_works(result.get("related_works", [])),
+                        'doi': result.get('doi', ''),
+                        'journal': journal_info,
+                        'biblio': result.get('biblio', ' ')
+                        }
         }
         processed_results.append(processed_item)
     
@@ -45,11 +58,6 @@ def search_parameters_to_search(query: str, client: OpenAI, idhandler: IDHandler
     if params.concepts:
         concepts = [idhandler.get_topic_id(concept) for concept in params.concepts]
         filters["topics.id"] = "|".join(concepts)
-        
-    # if params.institutions:
-    #     # For now we won't support search by institutions
-    #     institutions = [idhandler.get_institution_id(institution) for institution in params.institutions]
-    #     filters["institution"] = "|".join(institutions)
 
     if params.language: filters["language"] = params.language  
 

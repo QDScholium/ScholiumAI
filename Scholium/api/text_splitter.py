@@ -13,7 +13,7 @@ class SearchParameters(BaseModel):
     authors: list[str] = Field(
         description="List of author names to filter search results"
     )
-    concepts: list[str] = Field(
+    topics: list[str] = Field(
         description="List of key topics or concepts to search for"
     )
     language: str = Field(
