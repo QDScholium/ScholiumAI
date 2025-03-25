@@ -50,7 +50,7 @@ export function Results() {
         Citations
         */}
         
-          {agentState?.answer?.metadata?.length && (
+          {agentState?.answer?.paper_metadata?.length && (
             <div className="flex col-span-12 lg:col-span-4 flex-col gap-y-4 w-[200px]">
               <h2 className="flex items-center gap-x-2">
                 <div className="flex items-center gap-x-2">
@@ -60,10 +60,11 @@ export function Results() {
 
               </h2>
               <ul className="text-slate-900 font-light text-sm flex flex-col gap-y-2">
-                {agentState?.answer?.metadata.map(
+                {agentState?.answer?.paper_metadata?.map(
                   (ref: any, idx: number) => (
                     <li key={idx}>
                       <a
+                        href={ref.doi}
                         target="_blank"
                         rel="noopener noreferrer"
                       >
@@ -83,12 +84,13 @@ export function Results() {
             For debugging purposes  
            */}
           {/* <div>
-            {agentState?.answer?.metadata && (
+            {agentState?.answer?.paper_metadata&& (
               <pre>
-                {JSON.stringify(agentState?.answer?.metadata, null, 2)}
+                {JSON.stringify(agentState?.answer?.paper_metadata, null, 2)}
               </pre>
             )}
           </div> */}
+          
         </div>
       </div>
     </motion.div>

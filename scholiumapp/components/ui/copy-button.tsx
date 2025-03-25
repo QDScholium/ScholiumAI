@@ -13,7 +13,7 @@ const CopyToClipboard: React.FC = () => {
   });
   const { style} = useStyleContext();
   const [copied, setCopied] = useState(false);
-  const citations = processAndGenerateCitations(agentState?.answer?.metadata, style).join('\n')
+  const citations = processAndGenerateCitations(agentState?.answer?.paper_metadata, style).join('\n')
   
   const textToCopy = citations;
   const handleCopy = async () => {

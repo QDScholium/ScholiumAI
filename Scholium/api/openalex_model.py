@@ -39,6 +39,7 @@ model = ChatOpenAI(
 client = OpenAI(api_key=OPENAI_API_KEY)
 idhandler = IDHandler("sunny@scholium.ai")
 workshandler = WorksHandler("sunny@scholium.ai")
+
 class ResearchState(MessagesState):
     """
     This is the state of the agent.
@@ -122,12 +123,9 @@ async def generate_summary_node(state: ResearchState, config: RunnableConfig):
         docs_content += f"Title: {title}\nAbstract: {abstract}\n\n"
         
         # Extract metadata for citation purposes
-        metadata = paper.get('metadata', {})  
-        paper_metadata.append({
-            "title": title,
-            "metadata": metadata
-            })
-    print(docs_content)
+        metadata = paper.get('metadata', {})
+        metadata["title"] = title  # Add title to the metadata dictionary
+        paper_metadata.append(metadata)
 
     system_message_content = (
         f"Your job is to  summarize each paper relavent to the query: {query} from the retrieved context."
@@ -148,8 +146,8 @@ async def generate_summary_node(state: ResearchState, config: RunnableConfig):
         prompt,
         config)
     response = response.tool_calls[0]["args"]
-    print(response)
-    return {"answer": response, "paper_metadata": metadata}
+    response["paper_metadata"] = paper_metadata
+    return {"answer": response}
 
 def compile_graph():
     graph_builder = StateGraph(ResearchState)
@@ -166,14 +164,15 @@ def compile_graph():
     graph_builder.add_edge("generate_summary_node", END)
     checkpointer = MemorySaver()
     graph = graph_builder.compile(checkpointer=checkpointer)
+    # graph = graph_builder.compile()
     return graph
 
 # Create the RAG graph with default checkpoint configuration
 RAG = compile_graph()
 
-# if __name__ == '__main__':
-#     import asyncio
-#     query = "Find 2 papers about transformer models by Vaswani and Hinton in English from U of T"
-#     # query = "Hello!"
-#     print(asyncio.run(RAG.ainvoke({"messages": [{"role": "user", "content":query}]})))
-    
+if __name__ == '__main__':
+    import asyncio
+    query = "Find 2 papers about transformer models by Vaswani and Hinton in English from U of T"
+    # query = "Hello!"
+    result = asyncio.run(RAG.ainvoke({"messages": [{"role": "user", "content":query}]}))
+    print(result)

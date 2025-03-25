@@ -2,36 +2,37 @@ import { generateAPACitation, generateMLACitation, generateChicagoCitation, gene
 
 
 /**
- * Converts raw metadata into structured CitationData format
- * @param rawMetadata Raw metadata object from source
- * @returns Formatted CitationData object
+ * Formats raw metadata into the CitationData format required for citation generation
+ * @param rawMetadata Array of raw metadata objects from the API
+ * @returns Array of formatted CitationData objects
  */
-function formatMetadata(rawMetadataList: any[]): CitationData[] {
-  return rawMetadataList.map(rawMetadata => {
+export function formatMetadata(rawMetadata: any[]): CitationData[] {
+  return (rawMetadata).map(item => {
     // Extract and format authors
-    const authors: Author[] = [];
-    if (rawMetadata.authors) {
-      // Split author string by commas and process each author
-      rawMetadata.authors.split(',').forEach(authorString => {
-        const nameParts = authorString.trim().split(' ');
-        if (nameParts.length >= 2) {
-          authors.push({
-            firstName: nameParts.slice(0, -1).join(' '), // Everything except last name
-            lastName: nameParts[nameParts.length - 1]    // Last name
-          });
-        }
-      });
-    }
+    const authors: Author[] = item.authors?.map((authorArray: string[]) => {
+      return {
+        firstName: authorArray[0] || "",
+        lastName: authorArray[1] || ""
+      };
+    }) || [];
 
-    // Extract other citation fields with fallbacks
+    // Extract year from publication date
+    const year = item.publication_date ? 
+      parseInt(item.publication_date.substring(0, 4)) : 
+      new Date().getFullYear();
+
+    // Determine publisher (use journal name if available)
+    const publisher = item.journal || "";
+
     return {
       authors,
-      title: rawMetadata.title || '',
-      publisher: rawMetadata.publisher || 'arXiv',
-      year: rawMetadata.year?.toString() || ''
+      title: item.title || "",
+      publisher,
+      year
     };
   });
 }
+
 
 
 /**
@@ -66,9 +67,7 @@ function generateCitations(metadata: CitationData[], style: string): string[] {
  * @returns Array of formatted citations
  */
 export function processAndGenerateCitations(rawMetadata: any[], style: string): string[] {
-  // First convert raw metadata into CitationData format
   const citationData = formatMetadata(rawMetadata);
-  
   // Then generate citations in requested style
   return generateCitations(citationData, style);
 }
