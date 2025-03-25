@@ -8,7 +8,7 @@ from fastapi import FastAPI
 from copilotkit.integrations.fastapi import add_fastapi_endpoint
 from copilotkit import CopilotKitRemoteEndpoint, Action as CopilotAction
 from copilotkit import CopilotKitRemoteEndpoint, LangGraphAgent
-from api.model import RAG
+from api.openalex_model import RAG
 import uvicorn
 app = FastAPI()
 
@@ -21,7 +21,7 @@ sdk = CopilotKitRemoteEndpoint(
         ),
     ],
 )
- 
+
 add_fastapi_endpoint(app, sdk, "/copilotkit")
 
 def main():

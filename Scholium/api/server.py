@@ -8,7 +8,7 @@ from fastapi import FastAPI
 from copilotkit.integrations.fastapi import add_fastapi_endpoint
 from copilotkit import CopilotKitRemoteEndpoint, Action as CopilotAction
 from copilotkit import CopilotKitRemoteEndpoint, LangGraphAgent
-from api.model import RAG
+from api.openalex_model import RAG
 import uvicorn
 app = FastAPI()
 
@@ -26,12 +26,13 @@ sdk = CopilotKitRemoteEndpoint(
 # Add the CopilotKit endpoint to your FastAPI app
 add_fastapi_endpoint(app, sdk, "/copilotkit")
 
+print("hello")
 
 def main():
     """Run the uvicorn server."""
     port = int(os.getenv("PORT", "8000"))
     uvicorn.run(
-        "server:app",
+        "server:app",  
         host="localhost",
         port=port,
         reload=True,
