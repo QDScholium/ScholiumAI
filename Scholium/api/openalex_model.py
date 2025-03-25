@@ -55,7 +55,7 @@ def retrieve(query: str):
     return retrieved_docs
 
 system_prompt = """
-Decide explicitly if the user's query requires external retrieval. 
+Decide explicitly if the user's query is one of academic nature. 
 
 - If yes, respond strictly in this format: TOOL_CALL: <query> 
 - If no, respond conversationally.
@@ -64,6 +64,7 @@ Decide explicitly if the user's query requires external retrieval.
 async def query_or_respond(state: dict) -> dict:
     prompt_messages = [SystemMessage(content=system_prompt)] + state["messages"]
     response = await model.ainvoke(prompt_messages)
+    print(response)
     return {"messages": state["messages"] + [response]}
 
 tools = ToolNode([retrieve])
@@ -103,6 +104,8 @@ async def generate_summary_node(state: ResearchState, config: RunnableConfig):
         ]
     )
     query = state["messages"][-1].content[len("TOOL_CALL:"):]
+    print(query)
+
     results = search_open_alex(query, client=client, idhandler=idhandler, workshandler= workshandler)
 
     docs_content = ""
@@ -124,12 +127,12 @@ async def generate_summary_node(state: ResearchState, config: RunnableConfig):
             "title": title,
             "metadata": metadata
             })
-    
+    print(docs_content)
+
     system_message_content = (
-        "Your job is to recommend and summarize papers from the retrieved context."
-        "Use the following pieces of retrieved context to answer "
-        "the question. If you don't know the answer, say that you "
-        "don't know. Do not make up sources or use sources that are not in the retrieved context."
+        f"Your job is to  summarize each paper relavent to the query: {query} from the retrieved context."
+        "Use every following piece of retrieved context to answer"
+        "the question. Write about a paragraph for each." 
         "\n\n"
         f"{docs_content}"
     )
@@ -145,6 +148,7 @@ async def generate_summary_node(state: ResearchState, config: RunnableConfig):
         prompt,
         config)
     response = response.tool_calls[0]["args"]
+    print(response)
     return {"answer": response, "paper_metadata": metadata}
 
 def compile_graph():

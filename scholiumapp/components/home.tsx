@@ -28,8 +28,8 @@ export function HomeView() {
 
   const [isInputFocused, setIsInputFocused] = useState(false);
   const suggestions = [
-    { label: "Papers on BERT and Law"},
-    { label: "Attention is All You Need Summary" },
+    { label: "Four Papers on BERT"},
+    { label: "5 papers on Roman History" },
   ];
 
   return (

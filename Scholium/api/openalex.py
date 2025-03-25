@@ -403,8 +403,11 @@ class IDHandler(BaseOpenAlexHandler):
         return institution_link.split("https://openalex.org/")[1]
     
     def get_topic_id(self, topic_name: str) -> str:
-        topic_link = self.search(topic_name, endpoint="topics")[0]["id"]
-        return topic_link.split("https://openalex.org/")[1]
+        results = self.search(topic_name, endpoint="topics")
+        if results:
+            topic_link = self.search(topic_name, endpoint="topics")[0]["id"]
+            return topic_link.split("https://openalex.org/")[1]
+        return
 
 
 if __name__ == '__main__':

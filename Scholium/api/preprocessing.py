@@ -48,7 +48,7 @@ def process_results(results):
     
     return processed_results
 
-def search_parameters_to_search(query: str, client: OpenAI, idhandler: IDHandler, workshandler:WorksHandler):
+def search_parameters_to_search(query: str, client: OpenAI, idhandler: IDHandler, workshandler: WorksHandler):
     params = extract_search_parameters(query, client=client)
     filters= {}
     if params.authors:
@@ -56,8 +56,10 @@ def search_parameters_to_search(query: str, client: OpenAI, idhandler: IDHandler
         filters["author.id"] = "|".join(authors)
         
     if params.topics:
-        concepts = [idhandler.get_topic_id(concept) for concept in params.topics]
-        filters["topics.id"] = "|".join(concepts)
+        topics = [topic_id for topic in params.topics if (topic_id := idhandler.get_topic_id(topic))]
+        print(topics)
+        if topics:
+            filters["topics.id"] = "|".join(topics)
 
     if params.language: filters["language"] = params.language  
 
