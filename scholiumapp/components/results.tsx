@@ -9,6 +9,9 @@ import SelectCitation from "./ui/select"
 import { useStyleContext } from "../lib/citation-context";
 import CopyToClipboard from "./ui/copy-button";
 import HomeButton from "./ui/home_button";
+import LoadingState from "./ui/loading-state";
+import { Box, Progress } from "@radix-ui/themes";
+
 
 
 export function Results() {
@@ -32,6 +35,14 @@ export function Results() {
           </h1>
         </div>
 
+        <div>
+          {!agentState?.answer?.markdown && (
+            // <LoadingState message="Finding Documents"/>
+            <Box maxWidth="300px">
+              <Progress />
+            </Box>
+          )}
+        </div>
         {/* 
         Results from the model 
         */}
@@ -39,11 +50,6 @@ export function Results() {
           <div className="col-span-12 lg:col-span-8 flex flex-col">
             <div className="text-slate-700 font-light">
                 <DisplayMarkdown markdown={agentState?.answer?.markdown} />
-                {/* <pre className="mt-8 p-4 bg-slate-100 rounded-lg overflow-x-auto">
-                    <code>
-                        {JSON.stringify(agentState?.answer?.metadata, null, 2)}
-                    </code>
-                </pre> */}
             </div>
           </div>
         {/* 
