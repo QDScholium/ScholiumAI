@@ -11,7 +11,7 @@ import CopyToClipboard from "./ui/copy-button";
 import HomeButton from "./ui/home_button";
 import LoadingState from "./ui/loading-state";
 import { Box, Progress } from "@radix-ui/themes";
-
+import { useState, useEffect} from "react";
 
 
 export function Results() {
@@ -20,6 +20,10 @@ export function Results() {
   const { state: agentState } = useCoAgent<ResearchState>({
     name: "research_agent"
   });
+  const {papers, setPapers} = useStyleContext();
+  console.log(agentState?.answer?.results)
+
+
   return (
     <motion.div
       initial={{ opacity: 0, y: -50 }}
@@ -36,7 +40,7 @@ export function Results() {
         </div>
 
         <div>
-          {!agentState?.answer?.markdown && (
+          {!agentState?.answer?.results && (
             // <LoadingState message="Finding Documents"/>
             <Box maxWidth="300px">
               <Progress />
@@ -49,14 +53,23 @@ export function Results() {
         <div className="grid grid-cols-12 gap-8">
           <div className="col-span-12 lg:col-span-8 flex flex-col">
             <div className="text-slate-700 font-light">
-                <DisplayMarkdown markdown={agentState?.answer?.markdown} />
+                {agentState?.answer?.results?.map((result, index) => (
+                  <DisplayMarkdown 
+                    key={index}
+                    title={result.title}
+                    contents={result.summary}
+                    // metadata={result.metadata}
+                    idx = {index}
+                  />
+                ))}
             </div>
           </div>
+
         {/* 
         Citations
         */}
         
-          {agentState?.answer?.paper_metadata?.length && (
+          {agentState?.answer?.results && (
             <div className="flex col-span-12 lg:col-span-4 flex-col gap-y-4 w-[200px]">
               <h2 className="flex items-center gap-x-2">
                 <div className="flex items-center gap-x-2">
@@ -65,23 +78,26 @@ export function Results() {
                 </div>
 
               </h2>
-              <ul className="text-slate-900 font-light text-sm flex flex-col gap-y-2">
-                {agentState?.answer?.paper_metadata?.map(
-                  (ref: any, idx: number) => (
-                    <li key={idx}>
-                      <a
-                        href={ref.doi}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        {idx + 1}. {ref.title}
-                      </a>
-                    </li>
-                  )
+              <ul className="text-slate-900 font-light text-sm flex flex-col gap-y-2">           
+              {papers.map(
+                  (ref: any, idx: number) => {
+                    return (
+                      <li key={idx}>
+                        <a
+                          href={ref.metadata?.doi}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          {idx + 1}. {ref.metadata?.title || "Untitled Reference"}
+                        </a>
+                      </li>
+                    );
+                  }
                 )}
-                <li className="w-48">
+
+                {/* <li className="w-48">
                     <CopyToClipboard/>
-                </li>
+                </li> */}
               </ul>
             </div>
           )}

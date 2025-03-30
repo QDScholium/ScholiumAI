@@ -23,7 +23,6 @@ from copilotkit.langgraph import copilotkit_customize_config
 
 load_dotenv()
 
-
 logger = logging.getLogger('uvicorn.error')
 
 OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
@@ -65,7 +64,6 @@ Decide explicitly if the user's query is one of academic nature.
 async def query_or_respond(state: dict) -> dict:
     prompt_messages = [SystemMessage(content=system_prompt)] + state["messages"]
     response = await model.ainvoke(prompt_messages)
-    print(response)
     return {"messages": state["messages"] + [response]}
 
 tools = ToolNode([retrieve])
@@ -77,12 +75,21 @@ def tools_condition_fn(state):
         return ["tools"]
     return END
 
+class Result(BaseModel):
+    """A result from the academic paper search, containing the paper's title, abstract summary, and identifier.
+    
+    This model represents a structured output for academic paper search results,
+    providing essential information about the paper including its title, a
+    concise summary of its abstract content, and its OpenAlex ID for proper citation
+    and reference tracking. The structured format ensures consistent presentation
+    of research findings across the application."""
+    title: str = Field(description="The title of the academic paper strictly in this format: <Title>")
+    summary: str = Field(description="A concise summary of the paper's abstract highlighting key findings and methodology, formatted in markdown with appropriate styling")
+    id: str = Field(description="The OpenAlex ID of the paper for citation and reference purposes")
+
 class SummaryInput(BaseModel):
     """Input for the summarize tool"""
-    markdown: str = Field(description="""
-                          The markdown formatted summary of the final result.
-                          If you add any headings, make sure to start at the top level (#).
-                          """)
+    results: list[Result] = Field(description="A list of academic paper results to be summarized")
 
 @tool(args_schema=SummaryInput)
 def PaperSummaryTool(summary: str):
@@ -105,12 +112,11 @@ async def generate_summary_node(state: ResearchState, config: RunnableConfig):
         ]
     )
     query = state["messages"][-1].content[len("TOOL_CALL:"):]
-    print(query)
 
     results = search_open_alex(query, client=client, idhandler=idhandler, workshandler= workshandler)
 
     docs_content = ""
-    paper_metadata = []
+    paper_metadata = {}
 
     if not results:
         return {"answer": "NO PAPERS FOUND", "paper_metadata": {}}
@@ -120,19 +126,21 @@ async def generate_summary_node(state: ResearchState, config: RunnableConfig):
         abstract = paper.get('abstract', 'No abstract available')
         
         # Format the paper information
-        docs_content += f"Title: {title}\nAbstract: {abstract}\n\n"
+        open_alex_id = paper.get('open_alex_id', 'No ID available')
+        docs_content += f"Title: {title}\nAbstract: {abstract}\nOpenAlex ID: {open_alex_id}\n\n"
         
         # Extract metadata for citation purposes
         metadata = paper.get('metadata', {})
         metadata["title"] = title  # Add title to the metadata dictionary
-        paper_metadata.append(metadata)
-
+        paper_metadata[open_alex_id] = metadata
+    # metadata_str = "".join(str(meta) for meta in paper_metadata)
     system_message_content = (
         f"Your job is to  summarize each paper relavent to the query: {query} from the retrieved context."
         "Use every following piece of retrieved context to answer"
         "the question. Write about a paragraph for each." 
         "\n\n"
         f"{docs_content}"
+        # f"The metadata: {metadata_str}"
     )
 
     prompt = [SystemMessage(system_message_content)] + [
@@ -146,7 +154,9 @@ async def generate_summary_node(state: ResearchState, config: RunnableConfig):
         prompt,
         config)
     response = response.tool_calls[0]["args"]
-    response["paper_metadata"] = paper_metadata
+
+    [result.update({"metadata": paper_metadata[open_alex_id]}) for result in response["results"]]
+        
     return {"answer": response}
 
 def compile_graph():

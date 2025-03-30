@@ -6,18 +6,23 @@ import { createContext, useContext, useState, ReactNode } from "react";
 type StyleContextType = {
     style: string;
     setStyle: (style: string) => void;
+    papers: Array<any>;
+    setPapers: (papers: Array<any>) => void;
   };
 
 const StyleContext = createContext<StyleContextType | undefined>(undefined);
 
 export const StyleContextProvider = ({ children }: { children: ReactNode }) => {
-    const[style, setStyle] = useState<string>("APA");
+    const [style, setStyle] = useState<string>("APA");
+    const [papers, setPapers] = useState<Array<any>>([]);
 
       return (
         <StyleContext.Provider
           value={{
             style,
-            setStyle
+            setStyle,
+            papers,
+            setPapers
           }}
         >
           {children}

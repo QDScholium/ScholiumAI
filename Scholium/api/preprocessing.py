@@ -34,6 +34,7 @@ def process_results(results):
         processed_item = {
             'title': result.get('title', ''),
             'abstract': abstract,
+            "open_alex_id": result.get("id", "").split("/")[-1] if result.get("id") else "",
             'metadata':{
                         'publication_date': result.get('publication_date', ''),
                         'authors': parse_authors(result.get('authorships', [])),
@@ -41,7 +42,7 @@ def process_results(results):
                         'related_works': get_referenced_works(result.get("related_works", [])),
                         'doi': result.get('doi', ''),
                         'journal': journal_info,
-                        'biblio': result.get('biblio', ' ')
+                        'biblio': result.get('biblio', ' '),
                         }
         }
         processed_results.append(processed_item)
@@ -60,9 +61,8 @@ def search_parameters_to_search(query: str, client: OpenAI, idhandler: IDHandler
         print(topics)
         if topics:
             filters["topics.id"] = "|".join(topics)
-
-    if params.language: filters["language"] = params.language  
-
+    filters["language"] = params.language if params.language else "en"
+    
     n_papers = params.n_papers if params.n_papers else 10
     
     results = workshandler.search(query=params.query,filters=filters, n_results= n_papers)
