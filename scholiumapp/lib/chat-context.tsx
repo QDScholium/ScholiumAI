@@ -14,6 +14,8 @@ type ChatContextType = {
     setTextInput:(input: string) => void;
     researchResult: ChatResult | null;
     setChatResult: (result: ChatResult) => void;
+    isLoading: boolean;
+    setLoading: (loading: boolean) => void;
   };
 
 const ChatContext = createContext<ChatContextType | undefined>(undefined);
@@ -23,6 +25,7 @@ export const ChatContextProvider = ({ children }: { children: ReactNode }) => {
     // Need have an intermediate state between query and input so the site doesnt update on every key stroke
     const [textInput, setTextInput] = useState<string>(""); 
     const [researchResult, setChatResult] = useState<ChatResult | null>(null);
+    const [isLoading, setLoading] = useState<boolean>(true);
   
 
   useEffect(() => {
@@ -40,6 +43,8 @@ export const ChatContextProvider = ({ children }: { children: ReactNode }) => {
         setTextInput,
         researchResult,
         setChatResult,
+        isLoading,
+        setLoading
       }}
     >
       {children}

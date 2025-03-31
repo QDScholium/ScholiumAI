@@ -20,7 +20,8 @@ export function Results() {
     name: "research_agent"
   });
   const {papers, setPapers} = useStyleContext();
-  console.log(agentState?.answer?.results)
+  const [isLoading, setLoading] = useState(true);
+  console.log(agentState?.answer?.results);
 
 
   return (
@@ -52,17 +53,27 @@ export function Results() {
         <div className="grid grid-cols-12 gap-8">
           <div className="col-span-12 lg:col-span-8 flex flex-col">
             <div className="text-slate-700 font-light">
-                {agentState?.answer?.results?.map((result, index) => (
-                  <DisplayMarkdown 
-                    key={index}
-                    title={result.title}
-                    contents={result.summary}
-                    idx = {index}
-                    results = {agentState?.answer?.results}
-                  />
+                {agentState?.answer?.results?.map(
+                    (result, index) => (
+                    <DisplayMarkdown 
+                      key={index}
+                      title={result.title}
+                      contents={result.summary}
+                      idx = {index}
+                      results = {agentState?.answer?.results}
+                      loading = {isLoading}
+                    />
                 ))}
             </div>
           </div>
+
+          {agentState?.answer?.results
+           && agentState?.answer?.results.length > 0 
+           && agentState?.answer?.results[0].metadata 
+           && isLoading && (() => {
+                  setLoading(false);
+                  return null;
+                })()}
 
         {/* 
         Citations
