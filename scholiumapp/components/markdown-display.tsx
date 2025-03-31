@@ -9,10 +9,7 @@ import { useState } from "react";
 export function DisplayMarkdown({ title, contents, idx, results, loading}: { title: string; contents: string; idx: number; results: any[], loading: boolean}) {
   const {papers, setPapers} = useStyleContext();
   const [ticked, setTicked] = useState(false);
-  console.log(loading)
   function handleClick(idx){
-    console.log(results)
-    console.log(idx)
     if(!ticked){
       const metadata = results[idx].metadata;
       setPapers([...papers, { metadata }]);
