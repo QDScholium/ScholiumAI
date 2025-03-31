@@ -7,26 +7,28 @@ import { generateAPACitation, generateMLACitation, generateChicagoCitation, gene
  * @returns Array of formatted CitationData objects
  */
 export function formatMetadata(rawMetadata: any[]): CitationData[] {
+  console.log(rawMetadata)
   return (rawMetadata).map(item => {
     // Extract and format authors
-    const authors: Author[] = item.authors?.map((authorArray: string[]) => {
+    const authors: Author[] = item.metadata.authors?.map((authorArray: string[]) => {
       return {
         firstName: authorArray[0] || "",
         lastName: authorArray[1] || ""
       };
     }) || [];
 
+
     // Extract year from publication date
-    const year = item.publication_date ? 
-      parseInt(item.publication_date.substring(0, 4)) : 
+    const year = item.metadata.publication_date ? 
+      parseInt(item.metadata.publication_date.split('-')[0]) : 
       new Date().getFullYear();
 
     // Determine publisher (use journal name if available)
-    const publisher = item.journal || "";
+    const publisher = item.metadata.journal || "";
 
     return {
       authors,
-      title: item.title || "",
+      title: item.metadata.title || "",
       publisher,
       year
     };

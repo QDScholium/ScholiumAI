@@ -9,7 +9,6 @@ import SelectCitation from "./ui/select"
 import { useStyleContext } from "../lib/citation-context";
 import CopyToClipboard from "./ui/copy-button";
 import HomeButton from "./ui/home_button";
-import LoadingState from "./ui/loading-state";
 import { Box, Progress } from "@radix-ui/themes";
 import { useState, useEffect} from "react";
 
@@ -95,9 +94,9 @@ export function Results() {
                   }
                 )}
 
-                {/* <li className="w-48">
-                    <CopyToClipboard/>
-                </li> */}
+                <li className="w-48">
+                    <CopyToClipboard papers={papers}/>
+                </li>
               </ul>
             </div>
           )}

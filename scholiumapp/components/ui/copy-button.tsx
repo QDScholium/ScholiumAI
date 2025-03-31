@@ -7,13 +7,13 @@ import { processAndGenerateCitations } from '../../lib/metadata-citations';
 import { useStyleContext } from '../../lib/citation-context';
 import { Button } from "@radix-ui/themes";
 
-const CopyToClipboard: React.FC = () => {
+const CopyToClipboard: React.FC<{ papers?: any[] }> = ({ papers }) => {
   const { state: agentState } = useCoAgent<ResearchState>({
     name: "research_agent"
   });
   const { style} = useStyleContext();
   const [copied, setCopied] = useState(false);
-  const citations = processAndGenerateCitations(agentState?.answer?.results, style).join('\n')
+  const citations = processAndGenerateCitations(papers, style).join('\n')
   
   const textToCopy = citations;
   const handleCopy = async () => {
