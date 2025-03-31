@@ -58,8 +58,8 @@ export function Results() {
                     key={index}
                     title={result.title}
                     contents={result.summary}
-                    // metadata={result.metadata}
                     idx = {index}
+                    results = {agentState?.answer?.results}
                   />
                 ))}
             </div>

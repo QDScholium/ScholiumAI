@@ -155,7 +155,8 @@ async def generate_summary_node(state: ResearchState, config: RunnableConfig):
         config)
     response = response.tool_calls[0]["args"]
 
-    [result.update({"metadata": paper_metadata[open_alex_id]}) for result in response["results"]]
+
+    [result.update({"metadata": paper_metadata[result["id"]]}) for result in response["results"]]
         
     return {"answer": response}
 

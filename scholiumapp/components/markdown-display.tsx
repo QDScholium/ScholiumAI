@@ -6,19 +6,23 @@ import { useState } from "react";
 
 
 
-export function DisplayMarkdown({ title, contents, idx}: { title: string; contents: string; idx: number }) {
+export function DisplayMarkdown({ title, contents, idx, results }: { title: string; contents: string; idx: number; results: any[] }) {
   const {papers, setPapers} = useStyleContext();
   const [ticked, setTicked] = useState(false);
-  function handleClick(metadata){
+  function handleClick(idx){
+    console.log(results)
+    console.log(idx)
     if(!ticked){
+      const metadata = results[idx].metadata;
       setPapers([...papers, { metadata }]);
     } else {
+      const metadata = results[idx].metadata;
       setPapers(papers.filter(paper => paper.metadata !== metadata));
     }
     setTicked(!ticked);
     console.log("Papers collection updated:", papers);
   }
-  console.log(metadata)
+
   return (
     <>
       <div className="mt-4">
@@ -29,7 +33,7 @@ export function DisplayMarkdown({ title, contents, idx}: { title: string; conten
         <Checkbox 
           checked={ticked}
           onClick={() => {
-            handleClick(metadata);
+            handleClick(idx);
           }} 
         />
       </div>
@@ -41,6 +45,8 @@ export function DisplayMarkdown({ title, contents, idx}: { title: string; conten
             <Markdown>
             {contents}
             </Markdown>
+
+            
 
         </div>
       </Card>
