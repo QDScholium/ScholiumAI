@@ -83,6 +83,7 @@ class Result(BaseModel):
     concise summary of its abstract content, and its OpenAlex ID for proper citation
     and reference tracking. The structured format ensures consistent presentation
     of research findings across the application."""
+
     title: str = Field(description="The title of the academic paper strictly in this format: <Title>")
     summary: str = Field(description="A concise summary of the paper's abstract highlighting key findings and methodology, formatted in markdown with appropriate styling")
     id: str = Field(description="The OpenAlex ID of the paper for citation and reference purposes")
@@ -183,7 +184,6 @@ RAG = compile_graph()
 
 if __name__ == '__main__':
     import asyncio
-    query = "Find 2 papers about transformer models by Vaswani and Hinton in English from U of T"
-    # query = "Hello!"
+    query = "Papers on Roman History"
     result = asyncio.run(RAG.ainvoke({"messages": [{"role": "user", "content":query}]}))
     print(result)
